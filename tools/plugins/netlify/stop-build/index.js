@@ -1,5 +1,5 @@
 module.exports = {
-  onPrebuild: ({ utils }) => {
+  onPreBuild: ({ utils }) => {
     const currentProject = 'ws-client';
     const projectHasChanged = false;
     if (!projectHasChanged) {
