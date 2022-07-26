@@ -6,6 +6,7 @@
 import * as express from 'express';
 import * as http from 'http';
 
+import { addresses } from './app/ip';
 import websocket from './app/websocket';
 
 const app = express();
@@ -21,5 +22,6 @@ app.get('/api', (req, res) => {
 const port = process.env.port || 3333;
 server.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
+  console.log(`Listening at http://${addresses[0]}:${port}/api`);
 });
 server.on('error', console.error);

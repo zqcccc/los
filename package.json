@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "start:client": "nx serve client",
+    "start:server": "nx serve server",
     "build:client": "nx build client"
   },
   "private": true,

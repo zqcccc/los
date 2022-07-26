@@ -22,7 +22,9 @@ export function App() {
   useEffect(() => {
     if (websocket.current) return;
     const ws = new WebSocket(
-      `ws://${isLocalhost ? 'localhost:3333' : location.host}/websockets`
+      `ws://${`${
+        isLocalhost ? 'localhost' : location.hostname
+      }:3333`}/websockets`
     );
     ws.addEventListener('open', function open(e) {
       console.log('connected');

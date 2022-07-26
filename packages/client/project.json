@@ -52,7 +52,9 @@
       "options": {
         "buildTarget": "client:build",
         "hmr": true,
-        "proxyConfig": "packages/client/proxy.conf.json"
+        "proxyConfig": "packages/client/proxy.conf.json",
+        "allowedHosts": "all",
+        "host": "local-ip"
       },
       "configurations": {
         "development": {
