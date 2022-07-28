@@ -1,1 +1,23 @@
 /* Your styles goes here. */
+
+.message-list {
+  padding-bottom: 200px;
+}
+
+.img-container {
+  img {
+    max-width: 500px;
+    max-height: 500px;
+    object-fit: contain;
+  }
+}
+
+.input-area {
+  background-color: #fff;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  textarea {
+    height: 100px;
+  }
+}
