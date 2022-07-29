@@ -11,7 +11,7 @@
         "compiler": "babel",
         "outputPath": "dist/packages/client",
         "index": "packages/client/src/index.html",
-        "baseHref": "/",
+        "baseHref": "/client/",
         "main": "packages/client/src/main.tsx",
         "polyfills": "packages/client/src/polyfills.ts",
         "tsConfig": "packages/client/tsconfig.app.json",

@@ -2,6 +2,10 @@
 
 # Los
 
+写这个项目是因为，在日常的开发生活中，总是有一些很需要在局域网内传一些文字或者文件给其他的设备的时候，这个设备可能并不属于我，我只希望临时传一下，并不希望登陆什么社交 app，也不想用什么软件，最好是能用网页快速解决一下，于是就想着自己来写个这个东西
+
+这个项目并不需要上线，直接开两个命令行窗口，`yarn start:client` 和 `yarn start:server` 访问 client 的 `{启动 server 的局域网 ip}:4200/client/index.html` 就可以快速开始用了
+
 This project was generated using [Nx](https://nx.dev).
 
 <p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>

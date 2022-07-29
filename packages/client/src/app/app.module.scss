@@ -4,6 +4,17 @@
   padding-bottom: 200px;
 }
 
+.text-container {
+  display: flex;
+  align-items: center;
+  .text-item {
+    border: 1px #000 solid;
+    border-radius: 10px;
+    padding: 5px 8px;
+    margin: 5px;
+  }
+}
+
 .img-container {
   img {
     max-width: 500px;
@@ -13,11 +24,31 @@
 }
 
 .input-area {
+  width: 100vw;
   background-color: #fff;
   position: fixed;
   left: 0;
   bottom: 0;
-  textarea {
-    height: 100px;
+  padding: 10px;
+  .text-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    textarea {
+      height: 50px;
+      width: 70%;
+      border-radius: 20px;
+      padding: 10px;
+      resize: none;
+    }
+    button {
+      margin-left: 10px;
+    }
+  }
+  .file-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
