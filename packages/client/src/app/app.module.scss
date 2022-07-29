@@ -29,12 +29,16 @@
   position: fixed;
   left: 0;
   bottom: 0;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   .text-input {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
+    width: 100%;
     textarea {
       height: 50px;
       width: 70%;
@@ -50,5 +54,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    max-width: 480px;
+    font-family: sans-serif;
+    margin: 10px auto;
+    padding: 20px;
+    &.highlight {
+      border-color: purple;
+    }
   }
 }

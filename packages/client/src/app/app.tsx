@@ -1,10 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.scss'
 // import NxWelcome from './nx-welcome';
-import React, { useState, useEffect, useRef } from 'react'
-
+import React, { useState, useEffect, useRef, ChangeEvent } from 'react'
+import { useMemoizedFn } from 'ahooks'
 // import { Route, Routes, Link } from 'react-router-dom';
+import c from '../utils/className'
 import copy from '../utils/clipboard'
+import useDrag from '../hooks/drag'
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -49,6 +51,24 @@ const NodeTypeMap: { [key: string]: React.FC<MessageType> } = {
   ),
 }
 
+const upload = (file?: File) => {
+  if (file) {
+    const headers: Record<string, string> = {
+      'file-name': file?.name || '',
+    }
+    // browser doesn't recognize some types of files
+    if(file?.name?.endsWith('.dmg')) {
+      headers['Content-Type'] = 'application/octet-stream'
+    }
+    fetch(`${baseUri}/upload`, {
+      method: 'POST',
+      body: file,
+      headers,
+    })
+      .then((res) => res.text())
+      .then(console.log)
+  }
+}
 type MessageType = { type: string; value: string }
 export function App() {
   const [list, setList] = useState<MessageType[]>([])
@@ -94,6 +114,20 @@ export function App() {
       setValue('')
     }
   }
+
+  const handleEvent = useMemoizedFn((e: ChangeEvent<HTMLInputElement>) => {
+    uploadFiles(e.target.files)
+  })
+
+  const uploadFiles = (files?: FileList | null) => {
+    if (files) Array.from(files).forEach(upload)
+  }
+
+  const { isHighlight, dragEnterHandler, dragOutHandler, dropHandler } =
+    useDrag({
+      dropCallback: uploadFiles,
+    })
+
   return (
     <>
       <div className={styles['message-list']}>
@@ -113,26 +147,17 @@ export function App() {
           />
           <button onClick={sendTextHandle}>send</button>
         </div>
-        <div className={styles['file-input']}>
+        <div
+          className={c(styles['file-input'], {
+            [styles['highlight']]: isHighlight,
+          })}
+          onDragEnter={dragEnterHandler}
+          onDragOver={dragEnterHandler}
+          onDragLeave={dragOutHandler}
+          onDrop={dropHandler}
+        >
           <label htmlFor="upload">Choose a file:</label>
-          <input
-            type="file"
-            id="upload"
-            name="upload"
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (file)
-                fetch(`${baseUri}/upload`, {
-                  method: 'POST',
-                  body: file,
-                  headers: {
-                    'file-name': file?.name || '',
-                  },
-                })
-                  .then((res) => res.text())
-                  .then(console.log)
-            }}
-          />
+          <input type="file" id="upload" name="upload" onChange={handleEvent} />
         </div>
       </div>
     </>

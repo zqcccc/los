@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
+    "ahooks": "^3.6.2",
     "core-js": "^3.6.5",
     "express": "4.17.2",
     "query-string": "^7.1.1",
