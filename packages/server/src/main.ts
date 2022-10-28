@@ -67,7 +67,7 @@ app.get('/api', (req, res) => {
 
 app.use(express.static(resolve(__dirname, 'assets')))
 
-const port = process.env.port || 3333
+const port = process.env.PORT || 3333
 server.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`)
   console.log(`Listening at http://${addresses[0]}:${port}/api`)
