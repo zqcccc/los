@@ -5,7 +5,10 @@
   "scripts": {
     "start:client": "nx serve client",
     "start:server": "nx serve server",
-    "build:client": "nx build client"
+    "build:client": "nx build client",
+    "build:server": "nx build server",
+    "build": "nx run-many --target=build",
+    "start": "node dist/packages/server/main.js"
   },
   "private": true,
   "dependencies": {
