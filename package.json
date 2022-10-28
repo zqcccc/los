@@ -7,7 +7,7 @@
     "start:server": "nx serve server",
     "build:client": "nx build client",
     "build:server": "nx build server",
-    "build": "nx run-many --target=build",
+    "build": "nx run-many --target=build --configuration=production",
     "start": "node dist/packages/server/main.js"
   },
   "private": true,

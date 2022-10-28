@@ -7,6 +7,7 @@ import { useMemoizedFn } from 'ahooks'
 import c from '../utils/className'
 import copy from '../utils/clipboard'
 import useDrag from '../hooks/drag'
+import { environment } from '../environments/environment'
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -18,9 +19,14 @@ const isLocalhost = Boolean(
     )
 )
 
-const host = process.env['production']
-  ? window.location.hostname
-  : `${isLocalhost ? 'localhost' : window.location.hostname}:3333`
+console.log(
+  '%c environment.production: ',
+  'font-size:12px;background-color: #7F2B82;color:#fff;',
+  environment.production
+)
+const host = environment.production
+  ? window.location.host
+  : `${isLocalhost ? 'localhost' : window.location.hostname}:3333` // hostname has no port
 const baseUri = `${window.location.protocol}//${host}`
 const websocketUrl = `${
   window.location.protocol === 'https:' ? 'wss' : 'ws'
