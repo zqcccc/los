@@ -18,8 +18,13 @@ const isLocalhost = Boolean(
     )
 )
 
-const host = `${isLocalhost ? 'localhost' : window.location.hostname}:3333`
+const host = process.env['production']
+  ? window.location.hostname
+  : `${isLocalhost ? 'localhost' : window.location.hostname}:3333`
 const baseUri = `${window.location.protocol}//${host}`
+const websocketUrl = `${
+  window.location.protocol === 'https:' ? 'wss' : 'ws'
+}://${host}/websockets`
 
 const MediaLink = ({ value }: MessageType) => {
   return (
@@ -57,7 +62,7 @@ const upload = (file?: File) => {
       'file-name': file?.name || '',
     }
     // browser doesn't recognize some types of files
-    if(file?.name?.endsWith('.dmg')) {
+    if (file?.name?.endsWith('.dmg')) {
       headers['Content-Type'] = 'application/octet-stream'
     }
     fetch(`${baseUri}/upload`, {
@@ -76,7 +81,7 @@ export function App() {
   const websocket = useRef<WebSocket>()
   useEffect(() => {
     if (websocket.current) return
-    const ws = new WebSocket(`ws://${host}/websockets`)
+    const ws = new WebSocket(websocketUrl)
     ws.addEventListener('open', function open(e) {
       console.log('connected')
     })
