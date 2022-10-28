@@ -10,6 +10,7 @@
     "build": "nx run-many --target=build --configuration=production",
     "start": "node dist/packages/server/main.js"
   },
+  "engines": { "node": ">=14 <18" },
   "private": true,
   "dependencies": {
     "ahooks": "^3.6.2",
