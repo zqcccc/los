@@ -54,7 +54,8 @@
         "hmr": true,
         "proxyConfig": "packages/client/proxy.conf.json",
         "allowedHosts": "all",
-        "host": "local-ip"
+        "host": "localhost",
+        "port": 3334
       },
       "configurations": {
         "development": {

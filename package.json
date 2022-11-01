@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:client": "nx serve client",
+    "start:client": "nx serve client --verbose",
     "start:server": "nx serve server",
     "build:client": "nx build client",
     "build:server": "nx build server",
     "build": "nx run-many --target=build --configuration=production",
-    "start": "node dist/packages/server/main.js"
+    "start": "nx run-many --target=serve --projects=client,server",
+    "check": "node dist/packages/server/main.js"
   },
   "engines": { "node": ">=14 <19" },
   "private": true,

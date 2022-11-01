@@ -42,10 +42,11 @@ app.post('/upload', (req, res) => {
   const [fileType] = contentType.split('/')
   const exts = mime.getExtensions(contentType)
 
-  let assetName = fileName
+  let assetName = decodeURIComponent(fileName)
+  console.log('assetName: ', assetName)
   if (exts && exts.length) {
-    const hasExt = exts?.some((ext) => fileName.endsWith(`.${ext}`))
-    assetName = `${fileName}${hasExt ? '' : `.${exts[0]}`}`
+    const hasExt = exts?.some((ext) => assetName.endsWith(`.${ext}`))
+    assetName = `${assetName}${hasExt ? '' : `.${exts[0]}`}`
   }
 
   const write = createWriteStream(resolve(__dirname, `assets/${assetName}`))
