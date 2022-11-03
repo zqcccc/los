@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "nx run-many --target=build --configuration=production",
-    "dev": "nx run-many --target=serve --projects=client,server",
+    "dev": "nx run-many --target=serve --projects=client,server --configuration=development",
     "dev:client": "nx serve client --verbose",
     "dev:server": "nx serve server",
     "build:client": "nx build client",
@@ -24,6 +24,7 @@
     "react-dom": "18.2.0",
     "react-router-dom": "6.4.1",
     "regenerator-runtime": "0.13.7",
+    "spark-md5": "^3.0.2",
     "tslib": "^2.3.0",
     "ws": "^8.8.1"
   },
@@ -47,6 +48,7 @@
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.5",
     "@types/react-router-dom": "5.3.3",
+    "@types/spark-md5": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "babel-jest": "28.1.3",

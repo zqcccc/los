@@ -106,8 +106,4 @@ class Mime {
 }
 
 const ins = new Mime(define)
-console.log(
-  'ins.getExtension(video/quicktime): ',
-  ins.getExtension('video/quicktime')
-)
 export default ins

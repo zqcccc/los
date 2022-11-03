@@ -6,30 +6,9 @@ import { useMemoizedFn } from 'ahooks'
 import c from '../utils/className'
 import copy from '../utils/clipboard'
 import useDrag from '../hooks/drag'
-import { environment } from '../environments/environment'
-
-const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
-    // [::1] is the IPv6 localhost address.
-    window.location.hostname === '[::1]' ||
-    // 127.0.0.0/8 are considered localhost for IPv4.
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    )
-)
-
-console.log(
-  '%c environment.production: ',
-  'font-size:12px;background-color: #7F2B82;color:#fff;',
-  environment.production
-)
-const host = environment.production
-  ? window.location.host
-  : `${isLocalhost ? 'localhost' : window.location.hostname}:3333` // hostname has no port
-const baseUri = `${window.location.protocol}//${host}`
-const websocketUrl = `${
-  window.location.protocol === 'https:' ? 'wss' : 'ws'
-}://${host}/websockets`
+import fileMd5, { uploadFileByPartial } from '../utils/md5'
+import { baseUri, websocketUrl } from '../utils/uri'
+import { uploadFile } from '../utils/upload'
 
 const MediaLink = ({ value }: MessageType) => {
   return (
@@ -63,51 +42,28 @@ const NodeTypeMap: { [key: string]: React.FC<MessageType> } = {
 
 const upload = (file?: File, fn?: (n: number) => void) => {
   if (file) {
-    const headers: Record<string, string> = {
-      'file-name': encodeURIComponent(file?.name || ''),
+    console.log(
+      '%c file: ',
+      'font-size:12px;background-color: #83978C;color:#fff;',
+      file
+    )
+
+    if (file.size > 5 * 1024 * 1024) {
+      // 分片上传
+      return fileMd5(file).then((hashMap) => {
+        return uploadFileByPartial(file, (n) => fn?.(n), hashMap)
+      })
+    } else {
+      //  直接上传
+      const headers: Record<string, string> = {
+        'file-name': encodeURIComponent(file?.name || ''),
+      }
+      // browser doesn't recognize some types of files
+      if (file?.name?.endsWith('.dmg')) {
+        headers['Content-Type'] = 'application/octet-stream'
+      }
+      return uploadFile(file, undefined, headers, fn)
     }
-    // browser doesn't recognize some types of files
-    if (file?.name?.endsWith('.dmg')) {
-      headers['Content-Type'] = 'application/octet-stream'
-    }
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest()
-      // listen for `upload.load` event
-      xhr.upload.onload = () => {
-        resolve(xhr)
-        console.log(`The upload is completed: ${xhr.status} ${xhr.response}`)
-      }
-
-      // listen for `upload.error` event
-      xhr.upload.onerror = (e) => {
-        console.error('Upload failed.')
-        reject(e)
-      }
-
-      // listen for `upload.abort` event
-      xhr.upload.onabort = (e) => {
-        console.error('Upload cancelled.')
-        reject(e)
-      }
-
-      // listen for `progress` event
-      xhr.upload.onprogress = (event) => {
-        fn?.(Number(((event.loaded / event.total) * 100).toFixed(0)))
-        // event.loaded returns how many bytes are downloaded
-        // event.total returns the total number of bytes
-        // event.total is only available if server sends `Content-Length` header
-        console.log(`Uploaded ${event.loaded} of ${event.total} bytes`)
-      }
-
-      // open request
-      xhr.open('POST', `${baseUri}/upload`)
-
-      Object.entries(headers).forEach(([key, value]) =>
-        xhr.setRequestHeader(key, value)
-      )
-      // send request
-      xhr.send(file)
-    })
     // return fetch(`${baseUri}/upload`, {
     //   method: 'POST',
     //   body: file,
@@ -119,7 +75,7 @@ const upload = (file?: File, fn?: (n: number) => void) => {
     return Promise.resolve()
   }
 }
-type MessageType = { type: string; value: string }
+type MessageType = { type: string; value: string; from: string }
 export function App() {
   const [list, setList] = useState<MessageType[]>([])
   const [value, setValue] = useState('')
@@ -188,6 +144,7 @@ export function App() {
       const promiseArr = fileList.map((file, index) =>
         upload(file, (progress) => {
           uploadProgressArr[index] = progress
+          console.log('uploadProgressArr: ', uploadProgressArr)
           setProgress(
             Number(
               (
@@ -223,7 +180,12 @@ export function App() {
       <div className={styles['message-list']}>
         {list.map((item, index) => {
           const Component = NodeTypeMap[item.type] || MediaLink
-          return <Component key={index} {...item} />
+          return (
+            <div key={index} className={styles['container']}>
+              <span>{item.from}</span>
+              <Component {...item} />
+            </div>
+          )
         })}
       </div>
       <div className={styles['input-area']}>

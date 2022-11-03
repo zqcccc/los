@@ -4,19 +4,21 @@
  */
 
 import * as express from 'express'
-import { createWriteStream } from 'fs'
 import * as http from 'http'
 import { resolve } from 'path'
 
-import mime from './utils/mime'
 import { addresses } from './app/ip'
 import websocket from './app/websocket'
+import { environment } from './environments/environment'
+import { default as useUpload } from './app/upload'
 
 const app = express()
 
 const server = http.createServer(app)
 
 const { broadcast } = websocket(server)
+
+app.use(express.json())
 
 app.use('*', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -25,42 +27,21 @@ app.use('*', (req, res, next) => {
 })
 
 // static frontend resource
-app.use('/client', express.static(resolve(__dirname, '../client')))
-
-app.post('/upload', (req, res) => {
-  const contentType = req.headers['content-type']
-  console.log('contentType: ', contentType)
-  if (!contentType) {
-    res.send('Header content-type required')
-    return
-  }
-  const fileName = req.headers['file-name'] as string
-  if (!fileName) {
-    res.send('Header file-name required')
-    return
-  }
-  const [fileType] = contentType.split('/')
-  const exts = mime.getExtensions(contentType)
-
-  let assetName = decodeURIComponent(fileName)
-  console.log('assetName: ', assetName)
-  if (exts && exts.length) {
-    const hasExt = exts?.some((ext) => assetName.endsWith(`.${ext}`))
-    assetName = `${assetName}${hasExt ? '' : `.${exts[0]}`}`
-  }
-
-  const write = createWriteStream(resolve(__dirname, `assets/${assetName}`))
-  req.pipe(write)
-  write.on('close', () => {
-    console.log('write close')
-    // broadcast
-    broadcast({ type: fileType, value: assetName })
-    res.end('successfully upload')
+app.use(
+  '/client',
+  express.static(resolve(__dirname, '../client'), {
+    setHeaders(res, path, stat) {
+      if (express.static.mime.lookup(path) === 'text/html') {
+        // Custom Cache-Control for HTML files
+        res.setHeader('Cache-Control', 'public, max-age=0')
+      } else {
+        res.setHeader('Cache-Control', 'public, max-age=2592000000')
+      }
+    },
   })
-  write.on('error', (err) => {
-    res.end(err.toString())
-  })
-})
+)
+
+useUpload(app, broadcast)
 
 app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to server!' })
@@ -72,5 +53,15 @@ const port = process.env.PORT || 3333
 server.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`)
   console.log(`Listening at http://${addresses[0]}:${port}/api`)
+  console.log(
+    `Client may listen at http://localhost:${
+      environment.production ? port : 3334
+    }/client/index.html`
+  )
+  console.log(
+    `Client may listen at http://${addresses[0]}:${
+      environment.production ? port : 3334
+    }/client/index.html`
+  )
 })
 server.on('error', console.error)
