@@ -15,6 +15,12 @@
         "compiler": "tsc"
       },
       "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
         "production": {
           "optimization": true,
           "extractLicenses": true,
@@ -34,6 +40,9 @@
         "buildTarget": "server:build"
       },
       "configurations": {
+        "development": {
+          "buildTarget": "server:build:development"
+        },
         "production": {
           "buildTarget": "server:build:production"
         }
