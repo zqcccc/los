@@ -80,6 +80,16 @@ export function App() {
   const [list, setList] = useState<MessageType[]>([])
   const [value, setValue] = useState('')
   const websocket = useRef<WebSocket>()
+
+  const ref = useRef<HTMLInputElement>(null)
+
+  // useEffect(() => {
+  //   if (ref.current !== null) {
+  //     ref.current.setAttribute('directory', '')
+  //     ref.current.setAttribute('webkitdirectory', '')
+  //   }
+  // }, [ref])
+
   useEffect(() => {
     if (websocket.current) return
     const ws = new WebSocket(websocketUrl)
@@ -135,6 +145,14 @@ export function App() {
           return f.size / 1024 / 1024 > 50 // mb
         }) &&
         !window.confirm('Some file is more than 50mb, do you want to upload?')
+      ) {
+        return
+      }
+
+      if (
+        fileList.some((f) => {
+          return f.size === 0 // mb
+        })
       ) {
         return
       }
@@ -208,13 +226,16 @@ export function App() {
           onDragLeave={dragOutHandler}
           onDrop={dropHandler}
         >
-          <label htmlFor="upload">send a file:</label>
+          <label htmlFor="upload">
+            {isHighlight ? 'Drop now' : 'Upload files'}
+          </label>
           <input
             type="file"
             id="upload"
             name="upload"
             onChange={handleEvent}
             multiple
+            ref={ref}
           />
           {isUploading && `progress: ${progress}%`}
         </div>

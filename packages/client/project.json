@@ -53,9 +53,9 @@
         "buildTarget": "client:build",
         "hmr": true,
         "proxyConfig": "packages/client/proxy.conf.json",
-        "allowedHosts": "all",
-        "host": "localhost",
-        "port": 3334
+        "allowedHosts": "auto",
+        "host": "0.0.0.0",
+        "port": 3335
       },
       "configurations": {
         "development": {

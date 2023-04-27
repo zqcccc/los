@@ -56,6 +56,9 @@
     }
   }
   .file-input {
+    width: 70%;
+    min-width: 200px;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,6 +70,13 @@
     padding: 20px;
     &.highlight {
       border-color: purple;
+    }
+    input[type='file'] {
+      position: absolute;
+      width: 100%;
+      display: inline-block;
+      height: 100%;
+      opacity: 0;
     }
   }
 }

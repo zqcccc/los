@@ -2,8 +2,8 @@ import { useState, DragEvent, BaseSyntheticEvent } from 'react'
 import { useMemoizedFn } from 'ahooks'
 
 function preventDefaults(e: BaseSyntheticEvent) {
-  e.preventDefault()
-  e.stopPropagation()
+  // e.preventDefault()
+  // e.stopPropagation()
 }
 
 type HookOption = {
@@ -21,6 +21,7 @@ export default ({ dropCallback }: HookOption) => {
     preventDefaults(e)
     setIsHighlight(false)
     const dt = e.dataTransfer
+    console.log('%c e: ', 'font-size:12px;background-color: #93C0A4;color:#fff;', (e as any))
     const files = dt?.files
     dropCallback(files)
   })

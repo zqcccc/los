@@ -51,17 +51,21 @@ app.use(express.static(resolve(__dirname, 'assets')))
 
 const port = process.env.PORT || 3333
 server.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`)
-  console.log(`Listening at http://${addresses[0]}:${port}/api`)
-  console.log(
-    `Client may listen at http://localhost:${
-      environment.production ? port : 3334
-    }/client/index.html`
+  console.log(`server is listening at http://localhost:${port}/api`)
+  addresses.forEach((ip) =>
+    console.log(`server is listening at http://${ip}:${port}/api`)
   )
   console.log(
-    `Client may listen at http://${addresses[0]}:${
-      environment.production ? port : 3334
+    `Client may listen at http://localhost:${
+      environment.production ? port : 3335
     }/client/index.html`
+  )
+  addresses.forEach((ip) =>
+    console.log(
+      `Client may listen at http://${ip}:${
+        environment.production ? port : 3335
+      }/client/index.html`
+    )
   )
 })
 server.on('error', console.error)
